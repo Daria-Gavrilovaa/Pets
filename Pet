@@ -1,0 +1,44 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Pets_Actions
+{
+    public class Pet
+    {
+        public string Name;
+        public int Age;
+        public string Color;
+        public string Cover;
+
+        public Pet(string name, int age, string color, string cover) 
+        { 
+            Name = name;
+            Age = age;
+            Color = color;
+            Cover = cover;
+        }
+    }
+
+    public class Dog_or_Cat : Pet
+    {
+        public string Breed;
+
+        public Dog_or_Cat(string name, int age, string color, string cover, string breed) :  base(name, age, color, cover)
+        {
+            Breed = breed;
+        }
+    }
+
+    public class Other_animal : Pet
+    {
+        public string Type;
+
+        public Other_animal(string name, int age, string color, string cover, string type) : base(name, age, color, cover)
+        {  
+            Type = type; 
+        }
+    }
+}
