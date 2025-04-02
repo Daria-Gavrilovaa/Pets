@@ -1,0 +1,129 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+using Pets_Actions;
+
+namespace Pets
+{
+    /// <summary>
+    /// Логика взаимодействия для MainWindow.xaml
+    /// </summary>
+    public partial class MainWindow : Window
+    {
+        private List<Pet> pets = new List<Pet>();
+        private List<string> breeds = new List<string>();
+        private List<Pet> names = new List<Pet>();
+        public MainWindow()
+        {
+            InitializeComponent();
+            InitializePet();
+        }
+
+        private void InitializePet()
+        {
+            pets.Add(new Dog_or_Cat("Арнольд", 7, "Рыжий", "Шерсть", "Йорк"));
+            pets.Add(new Dog_or_Cat("Валюша", 6, "Черно-белый", "Шерсть", "Рагамаффин"));
+            pets.Add(new Dog_or_Cat("Валет", 12, "Черный", "Шерсть", "Британец"));
+            pets.Add(new Dog_or_Cat("Катюша", 13, "Белый", "Шерсть", "Британец"));
+            pets.Add(new Dog_or_Cat("Боня", 4, "Серый", "Шерсть", "Шотландская вислоухая"));
+            pets.Add(new Dog_or_Cat("Топа", 15, "Черный", "Шерсть", "Дворняжка"));
+            pets.Add(new Other_animal("Арнольд", 2, "Зеленый", "Перья", "Амазонский попугай"));
+            pets.Add(new Other_animal("Боня", 1, "Серый", "Шерсть", "Морская свинка тедди"));
+            pets.Add(new Other_animal("Ушастик", 3, "Рыжий", "Шерсть", "Голландский кролик"));
+            pets.Add(new Other_animal("Джет", 2, "Коричневый", "Шерсть", "Выдра"));
+        }
+
+        private void Show_All(object sender, RoutedEventArgs e)
+        {
+            string allPetsDetails = "Все питомцы:\n";
+            foreach (var pet in pets)
+            {
+                string animalType = pet is Dog_or_Cat dogOrCat ? $"Порода: {dogOrCat.Breed}" : $"Тип: {((Other_animal)pet).Type}";
+                allPetsDetails += $"{pet.Name}, Возраст: {pet.Age}, Цвет: {pet.Color}, Покрытие: {pet.Cover}, {animalType}\n";
+            }
+            All_pets_label.Text = allPetsDetails;
+        }
+
+        private void CalculateAverageAge(out double DogAverage, out double OtherAverage)
+        {
+            int dogCounter = 0;
+            int otherCounter = 0;
+            int dogAgesum = 0;
+            int otherAgesum = 0;
+            foreach (var pet in pets)
+            {
+                if (pet is Dog_or_Cat)
+                {
+                    dogCounter++;
+                    dogAgesum += pet.Age;
+                }
+                else
+                {
+                    otherAgesum += pet.Age;
+                    otherCounter++;
+                }
+            }
+            DogAverage = (double)dogAgesum / dogCounter;
+            OtherAverage = (double)otherAgesum / otherCounter;
+        }
+
+        private void Average_Click(object sender, RoutedEventArgs e)
+        {
+            CalculateAverageAge(out double dogAverageAge, out double otherAverageAge);
+            string AverageInfo = "Средний возраст каждого биологического вида:\n";
+            AverageInfo += $"Собаки и коты: {dogAverageAge:F2} лет\n";
+            AverageInfo += $"Другие животные: {otherAverageAge:F2} лет\n";
+            Ave_label.Text = AverageInfo;
+        }
+
+        private void Breed_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (var pet in pets)
+            {
+                if (pet is Dog_or_Cat dogOrCat)
+                {
+                    if (!breeds.Contains(dogOrCat.Breed))
+                    {
+                        breeds.Add(dogOrCat.Breed);
+                    }
+                }
+            }
+            string BreedName = "Породы собак и кошек:\n" + string.Join("\n", breeds); ;
+            Breed_label.Text = BreedName;
+        }
+
+        private void Same_Click(object sender, RoutedEventArgs e)
+        {
+            string sameNames = "Питомцы с одинаковыми кличками:\n";
+
+            for (int i = 0; i < pets.Count; i++)
+            {
+                for (int j = i + 1; j < pets.Count; j++)
+                {
+                    if (pets[i].Name == pets[j].Name)
+                    {
+                        names.Add(pets[i]);
+                        names.Add(pets[j]);
+                    }
+                }
+            }
+            foreach (var pet in names)
+            {
+                string Type = pet is Dog_or_Cat dogOrCat ? $"Порода: {dogOrCat.Breed}" : $"Тип: {((Other_animal)pet).Type}";
+                sameNames += $"{pet.Name}, Возраст: {pet.Age}, Цвет: {pet.Color}, Покрытие: {pet.Cover}, {Type}\n";
+            }
+            Same_label.Text = sameNames;
+        }
+    }
+}
